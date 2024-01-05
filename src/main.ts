@@ -1,4 +1,4 @@
-import { Firebot } from "@crowbartools/firebot-custom-scripts-types";
+import {Firebot, ScriptModules} from "@crowbartools/firebot-custom-scripts-types";
 
 interface Params {
   message: string;
@@ -7,8 +7,8 @@ interface Params {
 const script: Firebot.CustomScript<Params> = {
   getScriptManifest: () => {
     return {
-      name: "Starter Custom Script",
-      description: "A starter custom script for build",
+      name: "Debug Custom Script",
+      description: "A starter custom script for debug",
       author: "SomeDev",
       version: "1.0",
       firebotVersion: "5",
@@ -25,9 +25,17 @@ const script: Firebot.CustomScript<Params> = {
     };
   },
   run: (runRequest) => {
-    const { logger } = runRequest.modules;
-    logger.info(runRequest.parameters.message);
+    modules = runRequest.modules;
+    modules.logger.debug("Script Run")
   },
+  parametersUpdated(parameters: Params) {
+    modules.logger.debug("Script Params Updated", JSON.stringify(parameters, null, 4))
+  },
+  stop() {
+    modules.logger.debug("Script Stop")
+  }
 };
+
+let modules: ScriptModules;
 
 export default script;
